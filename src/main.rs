@@ -72,9 +72,7 @@ Run solutions to Advent Of Code 2023.
         25 => day25::solve_part1(input),
         i32::MIN..=0_i32 | 2_i32..=i32::MAX => panic!("Invalid input!"),
     };
-    println!("Solved Part 1 in {} ms: {}", start.elapsed().as_millis(), part1);
-    println!("");
-
+    println!("Solved Part 1 in {} ms. Answer: {}", start.elapsed().as_millis(), part1);
 
     let input = read_lines(&f);
 
@@ -107,7 +105,7 @@ Run solutions to Advent Of Code 2023.
         25 => day25::solve_part2(input),
         i32::MIN..=0_i32 | 2_i32..=i32::MAX => panic!("Invalid input!"),
     };
-    println!("Solved Part 2 in {} ms: {}", start.elapsed().as_millis(), part2)
+    println!("Solved Part 2 in {} ms. Answer: {}", start.elapsed().as_millis(), part2)
 }
 
 
