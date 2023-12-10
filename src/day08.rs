@@ -10,7 +10,10 @@ enum Dir {
     RIGHT,
 }
 
+// Modeling graphs in Rust is hard. Here is the idea I went with:
 // https://github.com/nrc/r4cppp/blob/master/graphs/README.md
+// And another option:
+// https://smallcultfollowing.com/babysteps/blog/2015/04/06/modeling-graphs-in-rust-using-vector-indices/
 struct Node<'a> {
     name: String,
     left_nodes: UnsafeCell<Vec<&'a Node<'a>>>,
@@ -114,8 +117,8 @@ fn parse_input(input: Lines<BufReader<File>>) -> (Vec<Dir>, HashMap<String, (Str
     return (directions, node_data);
 }
 
-
 pub(crate) fn solve_part2(input: Lines<BufReader<File>>)  -> String {
+    // https://www.reddit.com/r/adventofcode/comments/18e6vdf/2023_day_8_part_2_an_explanation_for_why_the/
     let (directions, raw_nodes) = parse_input(input);
     
     let dir_count = directions.len();
