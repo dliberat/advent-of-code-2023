@@ -20,18 +20,36 @@ struct Coord {
 struct DigPlanLine {
     dir: char,
     dist: u32,
-    color: String,
 }
 
 impl DigPlanLine {
-    fn from(line: &str) -> Self {
-        for (_, [dir, dist, color]) in DIG_PLAN_LINE_RE
+    fn from_part_1(line: &str) -> Self {
+        for (_, [dir, dist, _color]) in DIG_PLAN_LINE_RE
             .captures_iter(line)
             .map(|x| x.extract()) {
 
                 let dir = dir.chars().next().unwrap();
                 let dist: u32 = dist.parse::<u32>().unwrap();
-                return DigPlanLine{dir, dist, color: color.to_string()}
+                return DigPlanLine{dir, dist}
+        }
+        panic!("Invalid dig plan line");
+    }
+
+    fn from_part_2 (line: &str) -> Self {
+        for (_, [_dir, _dist, color]) in DIG_PLAN_LINE_RE
+            .captures_iter(line)
+            .map(|x| x.extract()) {
+
+                let dir = match color.chars().last().unwrap() {
+                    '0' => 'R',
+                    '1' => 'D',
+                    '2' => 'L',
+                    '3' => 'U',
+                    _ => panic!("Invalid directional character"),
+                };
+
+                let dist = u32::from_str_radix(&color[1..6], 16).unwrap();
+                return DigPlanLine{dir, dist}
         }
         panic!("Invalid dig plan line");
     }
@@ -43,7 +61,7 @@ pub(crate) fn solve_part1(input: Lines<BufReader<File>>)  -> String {
 }
 
 fn part_1_solver(data: Vec<String>) -> usize {
-    let dig_plan = parse_input(data);
+    let dig_plan: Vec<DigPlanLine> = data.iter().map(|line| DigPlanLine::from_part_1(line)).collect();
 
     // Dig out the trench
     let mut min_x = i32::MAX;
@@ -112,7 +130,7 @@ fn part_1_solver(data: Vec<String>) -> usize {
     return grid.iter().flatten().filter(|v| **v != '.').count();
 }
 
-fn fill_grid(grid: &mut Vec<Vec<char>>, height: usize, width: usize) {
+fn fill_grid(grid: &mut Vec<Vec<char>>, height: usize, _width: usize) {
     // We'll use BFS to fill the inside of the trench, but we need to find a point
     // inside the trench to start with. This way of finding it seems pretty reasonable,
     // although there could potentially be some edge cases such as a trench
@@ -173,8 +191,7 @@ fn fill_grid(grid: &mut Vec<Vec<char>>, height: usize, width: usize) {
     
 }
 
-
-fn print_grid(grid: &Vec<Vec<char>>) {
+fn _print_grid(grid: &Vec<Vec<char>>) {
     for row in grid {
         let s: String = row.into_iter().collect();
         println!("{}", s);
@@ -189,24 +206,19 @@ pub(crate) fn solve_part2(input: Lines<BufReader<File>>)  -> String {
     return String::from("");
 }
 
-fn parse_input(input: Vec<String>) -> Vec<DigPlanLine> {
-    input.iter().map(|line| DigPlanLine::from(line)).collect()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_parse_dig_plan_line() {
+    fn test_dig_plan_line_from_part_1() {
         let expected = DigPlanLine{
             dir: 'R',
             dist: 6,
-            color: String::from("#70c710")
         };
         let input = "R 6 (#70c710)";
         
-        let actual = DigPlanLine::from(input);
+        let actual = DigPlanLine::from_part_1(input);
         assert_eq!(expected, actual);
     }
 
@@ -230,5 +242,17 @@ mod tests {
         );
         let volume = part_1_solver(data);
         assert_eq!(62, volume);
+    }
+
+    #[test]
+    fn test_dig_plan_line_from_part_2() {
+        let expected = DigPlanLine{
+            dir: 'R',
+            dist: 461937,
+        };
+        let input = "R 6 (#70c710)";
+        
+        let actual = DigPlanLine::from_part_2(input);
+        assert_eq!(expected, actual);
     }
 }

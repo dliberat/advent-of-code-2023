@@ -389,7 +389,7 @@ mod tests {
         assert_eq!(94, result);
     }
 
-    // #[test]
+    #[test]
     fn test_part_2_solver_2() {
         let grid = Grid::new(vec!(
             vec!(1,1,1,1,1,1,1,1,1,1,1,1),

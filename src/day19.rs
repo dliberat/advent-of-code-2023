@@ -227,7 +227,7 @@ fn part_1_solver(rules: RuleMap, parts: Vec<MachinePart>) -> i32 {
 
     for part in parts {
         let mut ruleset = rules.get("in").unwrap();
-        while true {
+        loop {
             let result = ruleset.evaluate(&part);
             let val = result.expect("None result is unexpected.");
             if a == val {
